@@ -31,9 +31,9 @@ NSArray *sortOrderItems;
     [super viewDidLoad];
     
 	// Do any additional setup after loading the view.
-    sortOrderItems = @[@"Name", @"City", @"Birthday", @"State", @"Zip"];
-    _pckSortField.dataSource = self;
-    _pckSortField.delegate = self;
+    //sortOrderItems = @[@"Name", @"City", @"Birthday", @"State", @"Zip"];
+    //_pckSortField.dataSource = self;
+    //_pckSortField.delegate = self;
     // Set the UI based on values in NSUserDefaults
     NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
     
@@ -41,18 +41,33 @@ NSArray *sortOrderItems;
     //[_swAscending setOn:sortAscending];
     //Sets segment controller based on stored preferences
     if(sortAscending)
-    _swAscending.selectedSegmentIndex = 0;
+        _swAscending.selectedSegmentIndex = 0;
     else
         _swAscending.selectedSegmentIndex = 1;
-    NSString *sortField = [settings objectForKey:kSortField];
-    int i = 0;
-    for(NSString *field in sortOrderItems){
-        if([field isEqualToString:sortField]){
-            [_pckSortField selectRow:i inComponent:0 animated:NO];
-        }
-        i++;
-    }
-    [_pckSortField reloadComponent:0];
+    
+    NSInteger *sortField = [settings integerForKey:kSortField];
+    
+    //Set segment controller based on stored preferences
+    if(sortField==0)
+        _pckSortField.selectedSegmentIndex = 0;
+    else if(sortField == 1)
+        _pckSortField.selectedSegmentIndex = 1;
+    else if(sortField == 2)
+        _pckSortField.selectedSegmentIndex = 2;
+    else if(sortField == 3)
+        _pckSortField.selectedSegmentIndex = 3;
+    else
+        _pckSortField.selectedSegmentIndex = 4;
+    
+    //NSString *sortField = [settings objectForKey:kSortField];
+    //int i = 0;
+    //for(NSString *field in sortOrderItems){
+        //if([field isEqualToString:sortField]){
+            //[_pckSortField selectRow:i inComponent:0 animated:NO];
+        //}
+        //i++;
+    //}
+    //[_pckSortField reloadComponent:0];
 }
 
 - (void)didReceiveMemoryWarning
@@ -100,4 +115,19 @@ NSArray *sortOrderItems;
 }
 
 
+- (IBAction)sortOrderChanged:(id)sender {
+    // Save to user preferences if sort direction changed
+   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if(_pckSortField.selectedSegmentIndex==0)
+        [defaults setValue:0 forKey:kSortField];
+    else if(_pckSortField.selectedSegmentIndex==1)
+        [defaults setInteger:1 forKey:kSortField];
+    else if(_pckSortField.selectedSegmentIndex==2)
+        [defaults setInteger:2 forKey:kSortField];
+    else if(_pckSortField.selectedSegmentIndex==3)
+        [defaults setInteger:3 forKey:kSortField];
+    else
+        [defaults setInteger:4 forKey:kSortField];
+
+}
 @end
